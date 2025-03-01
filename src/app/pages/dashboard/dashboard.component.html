@@ -1,0 +1,14 @@
+<app-header [title]="titleDashboard"> </app-header>
+<div class="row m-0 p-0 justify-content-center gx-5 gy-2">
+    <div class="col-2">
+        <app-stat-box [title]="'Number of JOs'" [countElement]="sumJo"></app-stat-box>
+    </div>
+    <div class="col-2">
+        <app-stat-box [title]="'Number of countries'" [countElement]="sumCountry"></app-stat-box>
+    </div>
+</div>
+<div class="row m-0 p-0">
+    <div class="col-12">
+        <app-piechart [data]="olympics"></app-piechart>
+    </div>
+</div>

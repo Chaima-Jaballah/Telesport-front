@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
+import { Olympic } from '../models/Olympic';
 
 @Injectable({
   providedIn: 'root',
@@ -27,5 +28,30 @@ export class OlympicService {
 
   getOlympics() {
     return this.olympics$.asObservable();
+  }
+
+  numberOfJo(): Observable<number> {
+    return this.getOlympics().pipe(
+      map((olympics: Olympic[]) => {
+        let uniqueYears = new Set<number>();
+        if (!olympics || olympics.length === 0) return 0;
+        olympics.forEach((country) => {
+          country.participations.forEach((participation) => {
+            uniqueYears.add(participation.year);
+          });
+        });
+        return uniqueYears.size;
+      })
+    );
+  }
+
+  numberOfCountry() : Observable<number> {
+    return this.getOlympics().pipe(
+      map((olympics: Olympic[]) => {
+        if (!olympics || olympics.length === 0) return 0;
+        return olympics.length;
+      })
+    );
+
   }
 }
