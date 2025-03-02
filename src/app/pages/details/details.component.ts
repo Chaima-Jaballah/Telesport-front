@@ -7,10 +7,10 @@ import { ActivatedRoute } from '@angular/router';
   styleUrl: './details.component.scss'
 })
 export class DetailsComponent {
-  selectedCountryName!:String;
+  selectedCountryId!:String;
   constructor(private activatedRoute: ActivatedRoute){
     this.activatedRoute.params.subscribe((param:any)=>{
-      this.selectedCountryName = param.countryName;
+      this.selectedCountryId = param.id;
     })
   }
 }

@@ -19,7 +19,6 @@ export class DashboardComponent implements OnInit {
 
   constructor(private olympicService: OlympicService) {
     this.olympicService.getOlympics().subscribe(olympic => {
-      console.log(olympic)
       this.olympics.push(olympic);
     })
   }

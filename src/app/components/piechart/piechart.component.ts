@@ -12,7 +12,7 @@ import { OlympicService } from 'src/app/core/services/olympic.service';
 })
 export class PiechartComponent{
   @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
-
+  olympics!: Olympic[];
   // Pie
   public pieChartOptions: ChartConfiguration['options'] = {
     plugins: {
@@ -32,8 +32,8 @@ export class PiechartComponent{
     },
     onClick:(event, elements) => {
       const index = elements[0].index; // Get clicked index
-        const countryName = this.pieChartData.labels ? this.pieChartData.labels[index] : 'Unknown';
-        this.router.navigateByUrl(`details/${countryName}`)
+        const id = this.olympics[index].id;
+        this.router.navigateByUrl(`details/${id}`)
     }
   };
   public pieChartData: ChartData<'pie', number[], string | string[]> = {
@@ -57,19 +57,19 @@ loadMedalsData() : void {
     if (olympics) {
       let countryLabels: string[] = [];
       let medalCounts: number[] = [];
-
-      // **Parcours des données JSON**
+      this.olympics = olympics;
+      // Parcours des données JSON
       olympics.forEach((olympic: Olympic) => {
         let totalMedals = olympic.participations.reduce((sum, participation) => sum + participation.medalsCount, 0);
         countryLabels.push(olympic.country);
         medalCounts.push(totalMedals);
       });
-
-      // **Mise à jour des données du graphique**
+      
+      // Mise à jour des données du graphique
       this.pieChartData.labels = countryLabels;
       this.pieChartData.datasets[0].data = medalCounts;
 
-      // **Forcer la mise à jour du graphique**
+      // Forcer la mise à jour du graphique
       this.chart?.update();
     }
   });

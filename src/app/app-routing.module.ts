@@ -6,7 +6,7 @@ import { DetailsComponent } from './pages/details/details.component';
 
 const routes: Routes = [
   {
-    path: 'details/:countryName', 
+    path: 'details/:id', 
     component: DetailsComponent
   }
   ,
