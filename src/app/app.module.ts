@@ -10,11 +10,11 @@ import { StatBoxComponent } from './components/stat-box/stat-box.component';
 import { HeaderComponent } from './components/header/header.component';
 import { PiechartComponent } from './components/piechart/piechart.component';
 import { BaseChartDirective } from 'ng2-charts';
-import { Chart,PieController,ArcElement ,Tooltip, LineController} from 'chart.js';
+import { Chart,PieController,ArcElement ,Tooltip, LineController,CategoryScale,LinearScale,PointElement,LineElement} from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { DetailsComponent } from './pages/details/details.component';
 import { LinechartComponent } from './components/linechart/linechart.component';
-Chart.register(ChartDataLabels,PieController,ArcElement,Tooltip);
+Chart.register(ChartDataLabels,PieController,ArcElement,Tooltip,LineController,CategoryScale,LinearScale,PointElement,LineElement);
 
 @NgModule({
   declarations: [AppComponent, HomeComponent, NotFoundComponent,DashboardComponent,StatBoxComponent, HeaderComponent, PiechartComponent, DetailsComponent, LinechartComponent],

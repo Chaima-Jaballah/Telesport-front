@@ -1,2 +1,20 @@
-<p>details works!</p>
-{{selectedCountryId}}
+<button class="btn btn-sm btn-primary" (click)="back()">
+    <i class="fa-solid fa-backward"></i>
+</button>
+<app-header [title]="titleDetails"> </app-header>
+<div class="row m-0 p-0 gy-2 justify-content-center">
+    <div class="col-4 col-md-3">
+        <app-stat-box [title]="'Number of entries'" [countElement]="numberOfEntries"></app-stat-box>
+    </div>
+    <div class="col-4 col-md-3">
+        <app-stat-box [title]="'Total number medals'" [countElement]="totalMedals"></app-stat-box>
+    </div>
+    <div class="col-4 col-md-3">
+        <app-stat-box [title]="'Total number of athletes'" [countElement]="totalAthletesCount"></app-stat-box>
+    </div>
+</div>
+<div class="row m-0 p-0 gy-2 col-12 justify-content-center">
+    <div class="col-9">
+        <app-linechart [selectedCountryId]="selectedCountryId"></app-linechart>
+    </div>
+</div>
