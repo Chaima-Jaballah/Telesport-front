@@ -1,29 +1,37 @@
-# OlympicGamesStarter
+# Telesport Front
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.0.3.
+## Description
 
-Don't forget to install your node_modules before starting (`npm install`).
+Telesport est une application Angular permettant d'afficher des statistiques et des visualisations de données liées aux Jeux Olympiques. L'application utilise des graphiques  pour illustrer les performances des nations.
+Cette application utilise la librairie `ng2-charts`, basée sur Chart.js, pour l'affichage des graphiques.
 
-## Development server
+## Installation
+- [Node.js](https://nodejs.org/fr)  (version recommandée : LTS)
+- [Angular](https://v18.angular.dev/) (version 18)
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## Installation
+ ### 1. Cloner le dépôt :
+  ```git clone https://github.com/Chaima-Jaballah/Telesport-front.git ```
+ ### 2. Se déplacer dans le dossier du projet :
+   ```cd telesport```
+ ### 3. Installer les dépendances :
+  ``npm install``
 
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Where to start
-
-As you can see, an architecture has already been defined for the project. It is just a suggestion, you can choose to use your own. The predefined architecture includes (in addition to the default angular architecture) the following:
-
+## Utilisation
+### Démarrer en mode développement
+``npm run start``
+ L'application sera accessible sur http://localhost:4200/.
+### Construire le projet pour la production
+``npm run build ``
+## Structure du projet
 - `components` folder: contains every reusable components
 - `pages` folder: contains components used for routing
 - `core` folder: contains the business logic (`services` and `models` folders)
 
-I suggest you to start by understanding this starter code. Pay an extra attention to the `app-routing.module.ts` and the `olympic.service.ts`.
+## API et Données
 
-Once mastered, you should continue by creating the typescript interfaces inside the `models` folder. As you can see I already created two files corresponding to the data included inside the `olympic.json`. With your interfaces, improve the code by replacing every `any` by the corresponding interface.
+L'application consomme des données issues d'un fichier JSON local situé dans ``src/assets/mock/olympic.json.`` Un service Angular (``olympic.service.ts``) est utilisé pour charger et traiter ces données.
 
-You're now ready to implement the requested features.
+## Licence
 
-Good luck!
+Ce projet est sous licence [indiquer la licence, par ex. MIT].
