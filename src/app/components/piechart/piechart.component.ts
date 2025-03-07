@@ -1,7 +1,8 @@
-import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ChartConfiguration, ChartData, ChartEvent, ChartOptions, ChartType } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
+import { Observable, Subject, takeUntil } from 'rxjs';
 import { Olympic } from 'src/app/core/models/Olympic';
 import { OlympicService } from 'src/app/core/services/olympic.service';
 
@@ -10,11 +11,15 @@ import { OlympicService } from 'src/app/core/services/olympic.service';
   templateUrl: './piechart.component.html',
   styleUrl: './piechart.component.scss'
 })
-export class PiechartComponent {
+export class PiechartComponent implements OnInit, OnDestroy{
   @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
-  olympics!: Olympic[];
+  olympics: Olympic[]=[];
+  private destroy$ = new Subject<void>();
+
   // Pie
   public pieChartOptions: ChartConfiguration['options'] = {
+    responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: {
         display: true,
@@ -62,14 +67,17 @@ export class PiechartComponent {
     ],
   };
   public pieChartType: ChartType = 'pie';
-
   @Input() data!: Olympic[];
-  constructor(private olympicService: OlympicService, private router: Router) {
+
+  constructor(private olympicService: OlympicService, private router: Router) {}
+
+  ngOnInit(): void {
     this.loadMedalsData();
   }
 
   loadMedalsData(): void {
-    this.olympicService.getOlympics().subscribe((olympics) => {
+    this.olympicService.getOlympics().pipe(takeUntil(this.destroy$))
+    .subscribe((olympics) => {
       if (olympics) {
         let countryLabels: string[] = [];
         let medalCounts: number[] = [];
@@ -90,6 +98,11 @@ export class PiechartComponent {
       }
     });
 
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
 }
