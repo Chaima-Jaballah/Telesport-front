@@ -1,6 +1,7 @@
 import { Location } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Observable, of, Subject, takeUntil } from 'rxjs';
 import { Olympic } from 'src/app/core/models/Olympic';
 import { OlympicService } from 'src/app/core/services/olympic.service';
 
@@ -9,16 +10,22 @@ import { OlympicService } from 'src/app/core/services/olympic.service';
   templateUrl: './details.component.html',
   styleUrl: './details.component.scss'
 })
-export class DetailsComponent {
-  selectedCountryId!: number;
+export class DetailsComponent implements OnInit, OnDestroy{
+  selectedCountryId: number=0;
   titleDetails: string = "";
-  numberOfEntries!: number;
-  totalMedals!: number;
-  totalAthletesCount!: number;
-  constructor(private activatedRoute: ActivatedRoute, private olympicsService: OlympicService,private location: Location) {
+  numberOfEntries$: Observable<number>= of(0);
+  totalMedals$: Observable<number>= of(0);
+  totalAthletesCount$: Observable<number>= of(0);
+  private destroy$ = new Subject<void>();
+
+  constructor(private activatedRoute: ActivatedRoute, private olympicsService: OlympicService,private location: Location) 
+  {}
+
+  ngOnInit(): void {
     this.activatedRoute.params.subscribe((param: any) => {
       this.selectedCountryId = param.id;
-      this.olympicsService.getOlympics().subscribe(olympics => {
+      this.olympicsService.getOlympics().pipe(takeUntil(this.destroy$))
+      .subscribe(olympics => {
         if (olympics) {
           let selectedContry = olympics.filter((olympic: Olympic) => olympic.id == this.selectedCountryId);
           this.titleDetails = selectedContry[0].country
@@ -30,25 +37,25 @@ export class DetailsComponent {
     })
   }
 
-
   getNumberOfEntries(id: number) {
-    this.olympicsService.numberOfEntriesById(id).subscribe((numberOfEntries) => {
-      this.numberOfEntries = numberOfEntries
-    })
+    this.numberOfEntries$ =  this.olympicsService.numberOfEntriesById(id);
   }
 
   getTotalNumberOfMedals(id: number) {
-    this.olympicsService.totalOfMedals(id).subscribe((totalMedalsCount) => {
-      this.totalMedals = totalMedalsCount
-    })
+    this.totalMedals$= this.olympicsService.totalOfMedals(id);
   }
 
   getTotalAthletes(id: number) {
-    this.olympicsService.totalAthletes(id).subscribe((totalAthletesCount) => {
-      this.totalAthletesCount = totalAthletesCount
-    })
+    this.totalAthletesCount$= this.olympicsService.totalAthletes(id);
   }
+
   back(){
     this.location.back();
   }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+  
 }

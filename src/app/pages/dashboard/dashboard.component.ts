@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { HeaderComponent } from 'src/app/components/header/header.component';
 import { StatBoxComponent } from 'src/app/components/stat-box/stat-box.component';
 import { Olympic } from 'src/app/core/models/Olympic';
@@ -13,29 +13,26 @@ import { OlympicService } from 'src/app/core/services/olympic.service';
 })
 export class DashboardComponent implements OnInit {
   titleDashboard: string = 'Medals per Country';
-  olympics: Olympic[] = [];
-  sumJo!: number;
-  sumCountry!: number;
+  olympics$: Observable<Olympic[]> = of([]);
+  sumJo$: Observable<number>= of(0);
+  sumCountry$: Observable<number>=of(0);
 
-  constructor(private olympicService: OlympicService) {
-    this.olympicService.getOlympics().subscribe(olympic => {
-      this.olympics.push(olympic);
-    })
-  }
+  constructor(private olympicService: OlympicService) {}
+
+
   ngOnInit(): void {
+    this.olympics$=this.olympicService.getOlympics();
     this.getNumberOfJo();
     this.getNumberOfCountry();
   }
 
 
-
-
   getNumberOfJo(): void {
-    this.olympicService.numberOfJo().subscribe((sum) => { this.sumJo = sum });
+    this.sumJo$=this.olympicService.numberOfJo();
   }
 
   getNumberOfCountry(): void {
-    this.olympicService.numberOfCountry().subscribe((sum) => { this.sumCountry = sum });
+    this.sumCountry$= this.olympicService.numberOfCountry();
   }
 
 

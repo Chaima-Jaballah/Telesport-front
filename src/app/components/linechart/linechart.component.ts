@@ -1,6 +1,7 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ChartConfiguration, ChartType } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
+import { Subject, takeUntil } from 'rxjs';
 import { Olympic } from 'src/app/core/models/Olympic';
 import { Participation } from 'src/app/core/models/Participation';
 import { OlympicService } from 'src/app/core/services/olympic.service';
@@ -12,8 +13,9 @@ import { OlympicService } from 'src/app/core/services/olympic.service';
   templateUrl: './linechart.component.html',
   styleUrl: './linechart.component.scss'
 })
-export class LinechartComponent {
+export class LinechartComponent implements OnInit, OnDestroy{
   @Input() selectedCountryId!: number;
+  private destroy$ = new Subject<void>();
 
   public lineChartData: ChartConfiguration['data'] = {
     datasets: [
@@ -26,6 +28,8 @@ export class LinechartComponent {
   };
 
   public lineChartOptions: ChartConfiguration['options'] = {
+    responsive: true,
+    maintainAspectRatio: false,
     elements: {
       line: {
         tension: 0,
@@ -39,14 +43,15 @@ export class LinechartComponent {
   public lineChartType: ChartType = 'line';
 
   @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
-  constructor(private olympicsService: OlympicService) {
+  constructor(private olympicsService: OlympicService) {}
 
-  }
   ngOnInit(): void {
     this.loadMedalsData(this.selectedCountryId);
   }
+
   loadMedalsData(id: number) {
-    this.olympicsService.getOlympics().subscribe((olympics: Olympic[]) => {
+    this.olympicsService.getOlympics().pipe(takeUntil(this.destroy$))
+    .subscribe((olympics: Olympic[]) => {
       if (olympics) {
         let selectedCountrydata = olympics.filter(olympic => olympic.id == id)[0];
         let labels: number[] = [];
@@ -67,9 +72,20 @@ export class LinechartComponent {
           pointHoverBorderColor: 'rgba(148,159,177,0.8)',
           fill: 'origin',
         }]
+        this.chart?.update();
       }
     })
+    
   }
+
+  
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+
 }
 
 
