@@ -32,6 +32,4 @@ Cette application utilise la librairie `ng2-charts`, basée sur Chart.js, pour l
 
 L'application consomme des données issues d'un fichier JSON local situé dans ``src/assets/mock/olympic.json.`` Un service Angular (``olympic.service.ts``) est utilisé pour charger et traiter ces données.
 
-## Licence
 
-Ce projet est sous licence [indiquer la licence, par ex. MIT].
